@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0d0a14" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>星光与画稿</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preload" href="assets/images/heroine-isapara-cutout.png" as="image" />
+  <link rel="preload" href="assets/images/hero-xiaozhan-cutout.png" as="image" />
+</head>
+<body>
+  <div id="app">
+    <section id="screen-title" class="screen active">
+      <div class="title-bg" id="title-bg-layer"></div>
+      <div class="title-content">
+        <div class="title-copy">
+          <p class="title-verse">深夜画室，一笔未干。</p>
+          <h1>星光与画稿</h1>
+          <p class="title-hook">匿名委托只要一场会下雨的夜——<br />落款，却只有一个字母。<br /><span class="title-note">每次抉择都会改写关系与结局</span></p>
+        </div>
+        <div class="title-actions">
+          <button type="button" id="btn-start" class="btn-primary btn-title">进入故事</button>
+          <button type="button" id="btn-continue" class="btn-secondary btn-title-ghost hidden">继续</button>
+        </div>
+      </div>
+    </section>
+    <section id="screen-game" class="screen">
+      <header class="hud">
+        <div class="chapter-badge"><span id="chapter-label">序章</span></div>
+        <div class="stats-bar">
+          <div class="stat"><span class="stat-icon">♥</span><span id="stat-affection">0</span></div>
+          <div class="stat"><span class="stat-icon">✦</span><span id="stat-trust">0</span></div>
+          <div class="stat"><span class="stat-icon">⚡</span><span id="stat-stress">0</span></div>
+          <div class="stat"><span class="stat-icon">📰</span><span id="stat-rumor">0</span></div>
+        </div>
+      </header>
+      <div class="game-stage">
+        <div id="bg-layer" class="bg-layer"></div>
+        <div class="vignette"></div>
+        <div id="sprites" class="sprites">
+          <div id="sprite-heroine" class="sprite sprite-heroine hidden"><img src="assets/images/heroine-isapara-cutout.png" alt="isapara" class="sprite-img" /></div>
+          <div id="sprite-hero" class="sprite sprite-hero hidden"><img src="assets/images/hero-xiaozhan-cutout.png" alt="肖战" class="sprite-img sprite-img-hero" /></div>
+          <div id="sprite-npc" class="sprite sprite-npc hidden"><img id="sprite-npc-img" src="assets/images/npc/npc-colleague-cutout.png" alt="路人" class="sprite-img" /></div>
+        </div>
+        <div id="chapter-card" class="chapter-card hidden"></div>
+        <p id="game-hint" class="game-hint">点击对话框继续</p>
+      </div>
+      <div id="choices-panel" class="choices-panel hidden"></div>
+      <div class="dialogue-box" id="dialogue-box">
+        <div class="name-plate"><span id="speaker-name">isapara</span></div>
+        <p id="dialogue-text" class="dialogue-text">请点击标题页的「开始故事」</p>
+        <button type="button" id="btn-next" class="btn-next">▼ 继续</button>
+      </div>
+    </section>
+    <section id="screen-ending" class="screen">
+      <div id="ending-bg" class="ending-bg"></div>
+      <div class="ending-card">
+        <h2 id="ending-title"></h2>
+        <p id="ending-text"></p>
+        <div class="ending-stats" id="ending-stats"></div>
+        <button type="button" id="btn-restart" class="btn-primary">再玩一次</button>
+      </div>
+    </section>
+  </div>
+  <div id="load-error" class="load-error hidden"></div>
+  <script src="js/assets.js"></script>
+  <script src="js/story.js"></script>
+  <script src="js/story-expand.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

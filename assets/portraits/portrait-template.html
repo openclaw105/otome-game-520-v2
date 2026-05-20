@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>立绘模板 · 星光与画稿</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      padding: 2rem;
+      background: #0d0a14;
+      font-family: "PingFang SC", "Microsoft YaHei", serif;
+    }
+    .card {
+      width: 210px;
+      height: 260px;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(180deg, #1a1428 0%, #0a0812 100%);
+      box-shadow: 0 12px 32px rgba(0,0,0,.5);
+    }
+    .bust {
+      position: absolute;
+      left: 50%;
+      bottom: -8%;
+      transform: translateX(-50%);
+      width: 78%;
+      height: 88%;
+      border-radius: 50% 50% 42% 42%;
+    }
+    .label {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.75rem;
+      color: rgba(245,238,232,.85);
+      letter-spacing: .12em;
+    }
+  </style>
+</head>
+<body>
+  <!-- 用 HTML 预览与游戏内 generate_portraits.py 同色参数；导出请运行 scripts/generate_portraits.py -->
+  <div class="card"><div class="bust" style="background:linear-gradient(160deg,#5c3a48,#8b4a62);"></div><p class="label">粉丝</p></div>
+  <div class="card"><div class="bust" style="background:linear-gradient(160deg,#7a4058,#e8a4b8);"></div><p class="label">薇薇</p></div>
+  <div class="card"><div class="bust" style="background:linear-gradient(160deg,#6a3040,#c45d7a);"></div><p class="label">杨幂</p></div>
+  <div class="card"><div class="bust" style="background:linear-gradient(160deg,#1a1828,#4a5a78);"></div><p class="label">朱一龙</p></div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a2238"/>
+      <stop offset="100%" stop-color="#0e121c"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+  <rect x="0" y="520" width="1920" height="560" fill="#141a28"/>
+  <g fill="#1e2638" opacity="0.9">
+    <rect x="80" y="200" width="120" height="680"/><rect x="220" y="280" width="100" height="600"/>
+    <rect x="340" y="160" width="140" height="720"/><rect x="500" y="320" width="90" height="560"/>
+    <rect x="620" y="240" width="130" height="640"/><rect x="780" y="180" width="110" height="700"/>
+    <rect x="920" y="300" width="100" height="580"/><rect x="1040" y="220" width="150" height="660"/>
+    <rect x="1220" y="340" width="95" height="540"/><rect x="1340" y="190" width="120" height="690"/>
+    <rect x="1480" y="260" width="130" height="620"/><rect x="1640" y="300" width="100" height="580"/>
+  </g>
+  <g fill="#f5c842" opacity="0.85">
+    <rect x="720" y="420" width="18" height="28"/><rect x="760" y="380" width="18" height="28"/>
+    <rect x="800" y="450" width="18" height="28"/><rect x="840" y="400" width="18" height="28"/>
+    <rect x="880" y="430" width="18" height="28"/><rect x="920" y="390" width="18" height="28"/>
+  </g>
+  <text x="960" y="80" text-anchor="middle" fill="#8899bb" font-size="28" font-family="sans-serif">ñ · ™W| í</text>
+</svg>

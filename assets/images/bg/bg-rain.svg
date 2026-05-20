@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="r" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a3348"/>
+      <stop offset="100%" stop-color="#121820"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#r)"/>
+  <rect x="200" y="600" width="400" height="200" rx="8" fill="#e8c060" opacity="0.9"/>
+  <text x="400" y="710" text-anchor="middle" fill="#3a3020" font-size="36" font-weight="bold">¿)—</text>
+  <g stroke="#a8c8ff" stroke-width="2" opacity="0.35">
+    <line x1="100" y1="0" x2="60" y2="1080"/><line x1="300" y1="0" x2="260" y2="1080"/>
+    <line x1="500" y1="0" x2="460" y2="1080"/><line x1="700" y1="0" x2="660" y2="1080"/>
+    <line x1="900" y1="0" x2="860" y2="1080"/><line x1="1100" y1="0" x2="1060" y2="1080"/>
+    <line x1="1300" y1="0" x2="1260" y2="1080"/><line x1="1500" y1="0" x2="1460" y2="1080"/>
+    <line x1="1700" y1="0" x2="1660" y2="1080"/><line x1="1900" y1="0" x2="1860" y2="1080"/>
+  </g>
+  <text x="960" y="100" text-anchor="middle" fill="#b8c8e8" font-size="28">´è · WÒ¿)—</text>
+</svg>

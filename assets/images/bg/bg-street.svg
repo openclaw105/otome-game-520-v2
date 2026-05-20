@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+  <rect width="1920" height="1080" fill="#1a1820"/>
+  <rect x="0" y="750" width="1920" height="330" fill="#252028"/>
+  <line x1="0" y1="750" x2="1920" y2="750" stroke="#4a4550" stroke-width="4"/>
+  <g fill="#e8a030" opacity="0.6">
+    <rect x="300" y="200" width="600" height="120" rx="8"/><rect x="1000" y="280" width="500" height="100"/>
+  </g>
+  <text x="960" y="90" text-anchor="middle" fill="#9890a0" font-size="28">ÎW4</text>
+</svg>

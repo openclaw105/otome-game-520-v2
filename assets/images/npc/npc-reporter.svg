@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <circle cx="100" cy="100" r="98" fill="#1a2030" stroke="#a0b0c8" stroke-width="4"/>
+  <circle cx="100" cy="88" r="42" fill="#e8e0d0"/>
+  <rect x="70" y="130" width="60" height="8" fill="#888"/>
+  <text x="100" y="98" text-anchor="middle" fill="#384858" font-size="20" font-weight="bold">°</text>
+</svg>

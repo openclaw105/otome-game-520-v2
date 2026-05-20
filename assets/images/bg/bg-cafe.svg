@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+  <rect width="1920" height="1080" fill="#2a1f18"/>
+  <rect x="0" y="0" width="1920" height="400" fill="#4a3528" opacity="0.6"/>
+  <circle cx="300" cy="200" r="80" fill="#f0d080" opacity="0.25"/>
+  <circle cx="1600" cy="250" r="120" fill="#f0d080" opacity="0.2"/>
+  <rect x="400" y="500" width="1120" height="400" rx="24" fill="#3d2e24" stroke="#8b6a52" stroke-width="4"/>
+  <ellipse cx="960" cy="750" rx="200" ry="30" fill="#1a120e" opacity="0.5"/>
+  <text x="960" y="120" text-anchor="middle" fill="#e8d0b8" font-size="32">ê=ñaÜ ∑ ¡∫B</text>
+</svg>
