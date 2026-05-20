@@ -23,15 +23,14 @@ W, H = 420, 520
 # npc 文件 id -> 百度百科搜索名（须为亚洲艺人/角色）
 BAIDU_NAMES = {
     # xiaozhan：使用玩家提供的 hero-xiaozhan.png，不在此脚本覆盖
-    "zhuyilong": "朱一龙",
+    "zhangyixing": "张艺兴",
+    "songweilong": "宋威龙",
+    "gongjun": "龚俊",
     "yangmi": "杨幂",
-    "baijingting": "白敬亭",
     "nini": "倪妮",
-    "lixian": "李现",
     "yangzi": "杨紫",
-    "dengchao": "邓超",
     "curator": "刘涛",  # 刘姐（经纪人形象参考）
-    "bestie": "田曦薇",  # 闺蜜薇薇
+    # bestie：使用玩家上传的 npc-bestie 原图抠图，不在此脚本覆盖
     "landlord": "倪大红",
     "fan": "赵露思",
     "reporter": "董卿",

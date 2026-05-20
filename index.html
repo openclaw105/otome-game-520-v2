@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#0d0a14" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <title>星光与画稿</title>
+  <title>星光与画稿 V2 · 明星荟萃版</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;600&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="preload" href="assets/images/heroine-isapara-cutout.png" as="image" />
   <link rel="preload" href="assets/images/hero-xiaozhan-cutout.png" as="image" />
@@ -17,15 +17,59 @@
   <div id="app">
     <section id="screen-title" class="screen active">
       <div class="title-bg" id="title-bg-layer"></div>
+      <div class="title-ambience" aria-hidden="true">
+        <div class="title-rain"></div>
+        <div class="title-glow"></div>
+        <div class="title-vignette"></div>
+      </div>
+
+      <div class="title-stage" aria-hidden="true">
+        <div class="title-sprites">
+          <div class="sprite sprite-heroine title-sprite-in">
+            <img src="assets/images/heroine-isapara-cutout.png" alt="" class="sprite-img" />
+          </div>
+          <div class="sprite sprite-hero title-sprite-in title-sprite-delay">
+            <img src="assets/images/hero-xiaozhan-cutout.png" alt="" class="sprite-img sprite-img-hero" />
+          </div>
+        </div>
+        <p class="title-scene-label">画室 · 雨夜 · 序章</p>
+      </div>
+
       <div class="title-content">
-        <div class="title-copy">
+        <header class="title-head">
+          <p class="title-tag">原创互动剧 · 网页视觉小说</p>
+          <div class="title-brand">
+            <span class="title-v2-pill">V2</span>
+            <span class="title-edition">明星荟萃 · 进阶篇</span>
+          </div>
+        </header>
+
+        <nav class="title-progress" aria-label="剧情进阶">
+          <div class="title-step done"><span class="dot"></span><span>画室启程</span></div>
+          <div class="title-step done"><span class="dot"></span><span>圈内小聚</span></div>
+          <div class="title-step active"><span class="dot"></span><span>雨夜抉择</span></div>
+          <div class="title-step"><span class="dot"></span><span>轨迹展览</span></div>
+        </nav>
+
+        <div class="title-hero-block">
           <p class="title-verse">深夜画室，一笔未干。</p>
           <h1>星光与画稿</h1>
-          <p class="title-hook">匿名委托只要一场会下雨的夜——<br />落款，却只有一个字母。<br /><span class="title-note">每次抉择都会改写关系与结局</span></p>
+          <p class="title-sub">画家 isapara × 顶流 肖战</p>
+          <div class="title-tags" aria-label="故事标签">
+            <span>多路线</span><span>雨夜</span><span>闺蜜支线</span><span>多结局</span>
+          </div>
+          <p class="title-hook">匿名委托只要一场会下雨的夜——落款，却只有一个字母「Z」。</p>
         </div>
+
+        <div class="title-teaser dialogue-box" aria-label="序章台词预览">
+          <div class="name-plate"><span>isapara</span></div>
+          <p class="title-teaser-text">最后一管钴蓝挤不出来时，房租催缴单在门上沙沙响。工作室只剩一盏画灯……</p>
+          <p class="title-how">点击对话框继续 · 与游戏内界面一致</p>
+        </div>
+
         <div class="title-actions">
-          <button type="button" id="btn-start" class="btn-primary btn-title">进入故事</button>
-          <button type="button" id="btn-continue" class="btn-secondary btn-title-ghost hidden">继续</button>
+          <button type="button" id="btn-start" class="btn-primary btn-title">从画室序章开始</button>
+          <button type="button" id="btn-continue" class="btn-secondary btn-title-ghost hidden">继续旅程</button>
         </div>
       </div>
     </section>
@@ -53,7 +97,7 @@
       <div id="choices-panel" class="choices-panel hidden"></div>
       <div class="dialogue-box" id="dialogue-box">
         <div class="name-plate"><span id="speaker-name">isapara</span></div>
-        <p id="dialogue-text" class="dialogue-text">请点击标题页的「开始故事」</p>
+        <p id="dialogue-text" class="dialogue-text">请点击标题页的「从画室序章开始」</p>
         <button type="button" id="btn-next" class="btn-next">▼ 继续</button>
       </div>
     </section>
@@ -71,6 +115,8 @@
   <script src="js/assets.js"></script>
   <script src="js/story.js"></script>
   <script src="js/story-expand.js"></script>
+  <script src="js/story-routes.js"></script>
+  <script src="js/story-flow.js"></script>
   <script src="js/game.js"></script>
 </body>
 </html>

@@ -1,6 +1,8 @@
 /**
 
- * 剧情扩展：明星友人章节（不含周深）、闺蜜薇薇
+ * 剧情扩展：明星友人章节 · 闺蜜薇薇
+
+ * 剧情内男星（除肖战）仅：张艺兴、宋威龙、龚俊（支线）
 
  */
 
@@ -50,19 +52,16 @@
 
     { speaker: "肖战", text: "他耳根微红，没反驳，只把果盘往我这边推了推。", show: "hero", minAffection: 12 },
 
-    { speaker: "朱一龙", text: "他话不多，却在走廊停很久看未干的草图：「留白很好。……雨停之后，这里还可以再落一笔。」", show: "npc", minAffection: 12 },
+    { speaker: "张艺兴", text: "他递来温水，语气很稳：「别紧张，今天不采访，只聊天。」", show: "npc", minAffection: 12 },
 
-    { speaker: "白敬亭", text: "「我跟你说，他练舞时都在哼你的配色。」他胳膊肘轻碰肖战，笑得很阳光。", show: "npc", minAffection: 12 },
+    { speaker: "宋威龙", text: "「战哥说你画里的雨会呼吸。」他笑得很轻，「我也想看看原稿。」", show: "npc", minAffection: 12 },
 
     { speaker: "倪妮", text: "「衣服沾颜料了？」她递来湿巾，「艺术家特权。……下回展览叫我，我穿不会抢画的颜色。」", show: "npc", minAffection: 12 },
 
-    { speaker: "李现", text: "他把外套搭在沙发背上：「想喝热的就说。——这里空调总太冷。」", show: "npc", minAffection: 12 },
-
-    { speaker: "杨紫", text: "「我在隔壁房间录综艺，听说肖战带来个会画雨的！」她比了个拍照手势，「不拍，就看看。」", show: "npc", minAffection: 12 },
-
-    { speaker: "邓超", text: "「来来来，别僵。」他把气氛顶起来，「今天规则：不许聊热搜，只聊好吃的、好画的。」", show: "npc", minAffection: 12 },
+    { speaker: "杨紫", text: "「我在隔壁录综艺，听说肖战带来个会画雨的！」她比了个拍照手势，「不拍，就看看。」", show: "npc", minAffection: 12 },
 
     { speaker: "薇薇", text: "【微信】薇薇：「姐妹！！你真进圈了？？杨幂在你旁边那种？？回我！！」", show: "npc", minAffection: 12 },
+    { speaker: "龚俊", text: "他晚到半小时，进门先跟薇薇握手：「薇薇老师的展陈清单我路上看完了。」——薇薇差点把果汁打翻。", show: "npc", minAffection: 12 },
 
     {
 
@@ -84,7 +83,7 @@
 
     },
 
-    { needFlag: "party_paint", chapter: "ch2b", bg: "studio", speaker: "isapara", text: "我借了角落一张小桌，用水彩刷了半张夜景。朱一龙最后帮忙扶了扶画板——没说话，点了点头。", show: "heroine", minAffection: 12 },
+    { needFlag: "party_paint", chapter: "ch2b", bg: "studio", speaker: "isapara", text: "我借了角落一张小桌，用水彩刷了半张夜景。宋威龙最后帮忙扶了扶画板——没说话，点了点头。", show: "heroine", minAffection: 12 },
 
     { needFlag: "party_chat", speaker: "杨紫", text: "「你猫真的胖吗？」她认真问。我给她看卷卷照片，两个人笑到捂脸。", show: "npc", minAffection: 12 },
 
@@ -104,7 +103,7 @@
 
     { chapter: "ch4b", bg: "recording", speaker: "杨紫", text: "「又是你！」她摘下耳机，「肖战在里面录和声，我在外廊偷闲。……你别紧张，我不是狗仔。」", show: "npc", minTrust: 18 },
 
-    { speaker: "白敬亭", text: "他从另一间探头：「嘿，画师！战哥说你配色有雨声。」", show: "npc", minTrust: 18 },
+    { speaker: "张艺兴", text: "他从另一间探头：「嘿，画师！战哥说你配色有雨声。」", show: "npc", minTrust: 18 },
 
     { speaker: "isapara", text: "我靠在墙边听了三十秒，竟真的听出潮气。肖战推门出来，发梢还夹着录音棚的冷光。", show: "heroine", minTrust: 18 },
 
@@ -158,9 +157,9 @@
 
     { chapter: "ch1", speaker: "薇薇", text: "【语音】薇薇：「你家门缝下有张黑卡？？别慌，先拍照留证！……等等，好像不是诈骗？」", show: "npc", blockFlag: "ch1_cold" },
 
-    { chapter: "ch5", bg: "rooftop", speaker: "白敬亭", text: "【微信】白敬亭：「战哥说你们爱喝半糖可可。……别问怎么知道的。」", show: "npc", minAffection: 14 },
+    { chapter: "ch5", bg: "rooftop", speaker: "张艺兴", text: "【微信】张艺兴：「战哥说你们爱喝半糖可可。……别问怎么知道的。」", show: "npc", minAffection: 14 },
 
-    { chapter: "ch7", speaker: "朱一龙", text: "刘姐离开前，朱一龙在楼梯口停了一步：「画还在。……别删。」", show: "npc", needFlag: "angst_trust" },
+    { chapter: "ch7", speaker: "宋威龙", text: "刘姐离开前，宋威龙在楼梯口停了一步：「画还在。……别删。」", show: "npc", needFlag: "angst_trust" },
 
     { chapter: "ch8", speaker: "倪妮", text: "开展前，倪妮让人送来花篮，卡片只写：「给会下雨的人。」", show: "npc", minAffection: 16 },
 

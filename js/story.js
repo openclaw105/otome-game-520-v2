@@ -1,7 +1,7 @@
 /**
  * 星光与画稿 — 完整剧情
- * 女主 isapara · 独立绘画工作室 | 男主 肖战 · 顶流巨星
- * 标签：1v1 / 双洁 / HE / 虐恋转折 / BG
+ * 女主 isapara · 独立绘画工作室 | 主线 肖战 | 可攻略 张艺兴 / 宋威龙
+ * 支线：闺蜜薇薇 × 龚俊 | 多结局
  */
 const STORY = {
   chapters: [
@@ -31,9 +31,9 @@ const STORY = {
       type: "choice",
       prompt: "匿名委托来得蹊跷，但酬劳能救工作室。",
       options: [
-        { text: "接下委托，连夜赶稿", effects: { affection: 2, trust: 3, stress: 8 }, flag: "take_job" },
-        { text: "先查对方背景，再决定是否接", effects: { affection: 0, trust: 8, stress: 4 }, flag: "check_job" },
-        { text: "婉拒——不想出卖画风", effects: { affection: -2, trust: 5, stress: -5 }, flag: "refuse_job" },
+        { text: "接下委托，连夜赶稿", effects: { affection: 2, trust: 3, stress: 8 }, flag: "take_job", fx: "gold" },
+        { text: "先查对方背景，再决定是否接", effects: { affection: 0, trust: 8, stress: 4 }, flag: "check_job", fx: "rain" },
+        { text: "婉拒——不想出卖画风", effects: { affection: -2, trust: 5, stress: -5 }, flag: "refuse_job", fx: "violet" },
       ],
     },
     { needFlag: "take_job", speaker: "isapara", text: "我回了「接」。咖啡见底时，卷卷趴在洗笔池边打呼噜。天亮前，《城市雨迹》终于干透——像一场憋了很久的雨落了下来。", show: "heroine" },
@@ -45,7 +45,7 @@ const STORY = {
     { chapter: "ch1", bg: "studio", speaker: "isapara", text: "稿子改了七版。雨从窗框外斜着泼进来，路灯被晕染成一团团暖金。凌晨两点，我听见楼下有极轻的脚步声——不像醉汉，更像怕惊动什么的人。", show: "heroine" },
     { speaker: "？？？", text: "「抱歉，这么晚打扰。我来取画。」", show: "hero" },
     { speaker: "isapara", text: "开门的人戴着口罩与鸭舌帽，声音低而稳。他把一张黑卡放在玄关：「尾款，还有……」他顿了顿，「一封手写信。」" },
-    { speaker: "肖战", text: "「可以叫我肖战。——如果你愿意，先别上网搜这个名字。」他苦笑，眼神没有压迫感，只有疲惫的真诚。" },
+    { speaker: "肖战", text: "「可以叫我肖战。——如果你愿意，先别上网搜这个名字。」他苦笑，眼神没有压迫感，只有疲惫的真诚。", show: "hero" },
     { speaker: "isapara", text: "我愣住。卷卷却先炸毛一瞬，又嗅到他指背的松节油味，慢慢蹭过去。空气里浮着雨水与颜料的气息——我第一反应不是尖叫，而是他手背上也有洗不掉的颜料渍。" },
     { speaker: "肖战", text: "他蹲下，让卷卷闻了闻掌心，声音放轻：「别怕，我不抢你的地盘。」他抬头看我，眼里有一点笑，「好胖，好可爱。……像你工作室的吉祥物。」", show: "hero" },
     {
@@ -71,7 +71,7 @@ const STORY = {
     { speaker: "肖战（微信）", text: "【微信】肖战：「看到你了。……今晚有空吗？想把专辑母带里的隐藏插画，当面给你看。」", show: "hero" },
     { speaker: "isapara", text: "我盯着屏幕，心跳乱拍。粉丝在超话刷#肖战新歌#，卷卷瘫在键盘旁睡成一张猫饼，我泡了一碗面，却觉得面汤也烫得像秘密。" },
     { chapter: "ch2", bg: "backstage", speaker: "肖战", text: "后台走廊很长，他把我藏在工作人员牌后面，声音压得很低：「别怕。这一段路，我走过很多次。」", show: "both" },
-    { speaker: "肖战", text: "他给我看未发布的插画——画的是工作室那盏旧灯。画角签名不是明星名，而是极小的「Z 与 I」。" },
+    { speaker: "肖战", text: "他给我看未发布的插画——画的是工作室那盏旧灯。画角签名不是明星名，而是极小的「Z 与 I」。", show: "both" },
     {
       type: "choice",
       prompt: "后台走廊的空气里都是他的世界。",
@@ -118,6 +118,7 @@ const STORY = {
     { speaker: "肖战", text: "「isapara，我不是来你人生里打卡的。……如果你愿意，我想认真追你。很慢，很笨，但不会对别人。」", show: "both" },
     {
       type: "choice",
+      highEnergy: true,
       prompt: "灯火下，他递来一颗干净的心。",
       options: [
         { text: "「我也只想认真对你。」", effects: { affection: 15, trust: 15, rumor: 6 }, flag: "love_ok" },
@@ -224,6 +225,7 @@ const STORY = {
     { speaker: "isapara", text: "闪光灯炸开。我本能后退，他下台，在众目下握住我的手——掌心仍是颜料与可可混合的气味。", show: "both" },
     {
       type: "choice",
+      highEnergy: true,
       prompt: "结局前夕，你要如何回应全世界？",
       options: [
         { text: "握紧他的手，一起面对镜头", effects: { affection: 15, trust: 15, rumor: 10 }, flag: "he_hand" },

@@ -1,5 +1,5 @@
 (function () {
-  const SAVE_KEY = "xingguang_otome_v7";
+  const SAVE_KEY = "xingguang_otome_v10";
 
   const state = {
     index: 0,
@@ -125,13 +125,12 @@
     if (!speaker) return null;
     if (/房东/.test(speaker)) return "landlord";
     if (/刘姐|刘婉|表姐/.test(speaker)) return "curator";
-    if (/朱一龙/.test(speaker)) return "zhuyilong";
+    if (/张艺兴/.test(speaker)) return "zhangyixing";
+    if (/宋威龙/.test(speaker)) return "songweilong";
+    if (/龚俊/.test(speaker)) return "gongjun";
     if (/杨幂/.test(speaker)) return "yangmi";
-    if (/白敬亭/.test(speaker)) return "baijingting";
     if (/倪妮/.test(speaker)) return "nini";
-    if (/李现/.test(speaker)) return "lixian";
     if (/杨紫/.test(speaker)) return "yangzi";
-    if (/邓超/.test(speaker)) return "dengchao";
     if (/薇薇|闺蜜/.test(speaker)) return "bestie";
     if (/老板/.test(speaker)) return "boss";
     if (/同事|小周/.test(speaker)) return "colleague";
@@ -172,7 +171,7 @@
     if (!speaker) return "heroine";
     if (/肖战|战哥|X\.Z/i.test(speaker)) return "hero";
     if (/isapara/i.test(speaker)) return "heroine";
-    if (/房东|刘姐|刘婉|朱一龙|杨幂|白敬亭|倪妮|李现|杨紫|邓超|薇薇|闺蜜|老板|同事|娱记|记者|经纪人|粉丝|旁白|小周|弹幕/.test(speaker)) return "npc";
+    if (/房东|刘姐|刘婉|张艺兴|宋威龙|龚俊|杨幂|倪妮|杨紫|薇薇|闺蜜|老板|同事|娱记|记者|经纪人|粉丝|旁白|小周|弹幕/.test(speaker)) return "npc";
     return "heroine";
   }
 
@@ -279,33 +278,202 @@
     $("btn-continue").classList.add("hidden");
   }
 
+  const HIGH_ENERGY_FLAGS = new Set([
+    "route_zyx_lock", "route_swl_lock", "route_xz_lock", "route_alone",
+    "love_ok", "love_wait", "love_doubt",
+    "go_public", "stay_secret", "pause_meet",
+    "angst_block", "angst_trust", "hurt_self", "call_him",
+    "go_see_him", "reject_gift", "wait_apology",
+    "he_hand", "he_speech", "he_kiss",
+    "zyx_confess", "swl_confess", "zyx_reject", "swl_reject",
+    "vivi_gong_push", "ch2_confirm", "flirt_zyx", "flirt_swl",
+  ]);
+
+  function isHighEnergyOption(opt) {
+    if (!opt) return false;
+    if (opt.highEnergy) return true;
+    if (opt.flag && HIGH_ENERGY_FLAGS.has(opt.flag)) return true;
+    const e = opt.effects || {};
+    if (Math.abs(e.affection || 0) >= 12) return true;
+    if (Math.abs(e.trust || 0) >= 14) return true;
+    if (Math.abs(e.stress || 0) >= 12) return true;
+    if (Math.abs(e.rumor || 0) >= 12) return true;
+    return false;
+  }
+
+  function isHighEnergyPanel(node) {
+    if (!node || !node.options) return false;
+    if (node.highEnergy || node.tier === "high") return true;
+    return node.options.some(isHighEnergyOption);
+  }
+
+  const CHOICE_FX_THEMES = ["gold", "rose", "rain", "violet", "ember"];
+
+  function choiceFxTheme(opt, index) {
+    if (opt.fx && CHOICE_FX_THEMES.indexOf(opt.fx) >= 0) return opt.fx;
+    return CHOICE_FX_THEMES[index % CHOICE_FX_THEMES.length];
+  }
+
+  function buildChoiceFxLayer(panelTheme) {
+    const fx = document.createElement("div");
+    fx.className = "choices-fx choices-fx--" + panelTheme;
+    fx.setAttribute("aria-hidden", "true");
+    fx.innerHTML =
+      '<div class="choices-aurora"></div>' +
+      '<div class="choices-stream choices-stream--l"></div>' +
+      '<div class="choices-stream choices-stream--r"></div>';
+    const particles = document.createElement("div");
+    particles.className = "choices-particles";
+    for (let i = 0; i < 36; i++) {
+      const p = document.createElement("span");
+      p.className = "choices-particle";
+      p.style.setProperty("--x", (5 + Math.random() * 90).toFixed(1) + "%");
+      p.style.setProperty("--dur", (1.8 + Math.random() * 2.8).toFixed(2) + "s");
+      p.style.setProperty("--delay", (Math.random() * 2.2).toFixed(2) + "s");
+      p.style.setProperty("--size", (4 + Math.random() * 6).toFixed(1) + "px");
+      particles.appendChild(p);
+    }
+    fx.appendChild(particles);
+    return fx;
+  }
+
+  function buildButtonFx(theme) {
+    const wrap = document.createElement("span");
+    wrap.className = "choice-btn-fx";
+    wrap.setAttribute("aria-hidden", "true");
+    const aura = document.createElement("span");
+    aura.className = "choice-btn-aura";
+    const shine = document.createElement("span");
+    shine.className = "choice-btn-shine";
+    const orbit = document.createElement("span");
+    orbit.className = "choice-btn-orbit";
+    const sparks = document.createElement("span");
+    sparks.className = "choice-btn-sparks";
+    for (let i = 0; i < 8; i++) {
+      const s = document.createElement("i");
+      s.style.setProperty("--i", String(i));
+      sparks.appendChild(s);
+    }
+    wrap.appendChild(aura);
+    wrap.appendChild(orbit);
+    wrap.appendChild(shine);
+    wrap.appendChild(sparks);
+    return wrap;
+  }
+
+  function clearChoiceFx() {
+    ui.choices.classList.remove("choices-panel--active", "choices-panel--ready", "choices-panel--high");
+    CHOICE_FX_THEMES.forEach((t) => ui.choices.classList.remove("choices-panel--theme-" + t));
+    if (ui.dialogueBox) {
+      ui.dialogueBox.classList.remove("dialogue-box--choice-active", "dialogue-box--high-choice");
+    }
+  }
+
+  /** 面板从 hidden 切出后，强制启动 CSS 动画（避免要点一下才播放） */
+  function kickChoiceAnimations() {
+    const restart = (root, selector) => {
+      root.querySelectorAll(selector).forEach((el) => {
+        el.style.animation = "none";
+        void el.offsetWidth;
+        el.style.removeProperty("animation");
+      });
+    };
+    requestAnimationFrame(() => {
+      void ui.choices.offsetWidth;
+      ui.choices.classList.add("choices-panel--ready");
+      restart(ui.choices, ".choices-particle, .choices-aurora, .choices-stream");
+      restart(ui.choices, ".choice-btn--fx, .choice-btn-aura, .choice-btn-orbit, .choice-btn-shine, .choice-btn-sparks i");
+      requestAnimationFrame(() => {
+        void ui.choices.offsetWidth;
+      });
+    });
+  }
+
   function showChoices(node) {
     hideChapterCard();
     state.waitingChoice = true;
     state.lineReady = false;
-    ui.choices.classList.remove("hidden");
-    ui.choices.innerHTML = "";
-    setHint("请选择对话框上方选项");
-    ui.text.textContent = node.prompt || "请选择：";
+    const panelHigh = isHighEnergyPanel(node);
+    const panelTheme = choiceFxTheme(node.options[0] || {}, 0);
 
-    node.options.forEach((opt) => {
+    clearChoiceFx();
+    ui.choices.innerHTML = "";
+    ui.choices.classList.remove("hidden");
+    ui.choices.classList.toggle("choices-panel--high", panelHigh);
+    CHOICE_FX_THEMES.forEach((t) => ui.choices.classList.remove("choices-panel--theme-" + t));
+    ui.choices.classList.add("choices-panel--theme-" + panelTheme);
+
+    setSprites(inferSprites(node.speaker, "heroine"), node.speaker || "isapara");
+
+    if (ui.dialogueBox) {
+      ui.dialogueBox.classList.add("dialogue-box--choice-active");
+      ui.dialogueBox.classList.toggle("dialogue-box--high-choice", panelHigh);
+    }
+
+    setHint(panelHigh ? "✦ 关键抉择 · 请选择上方流光选项" : "✦ 请选择上方流光选项");
+    const prompt = node.prompt || "请选择：";
+    if (ui.text) {
+      ui.text.innerHTML = '<span class="choice-prompt-glow">' + prompt + "</span>";
+    }
+
+    ui.choices.appendChild(buildChoiceFxLayer(panelTheme));
+    if (panelHigh) {
+      const badge = document.createElement("div");
+      badge.className = "choices-badge";
+      badge.innerHTML = '<span class="choices-badge-spark"></span><span>关键抉择</span>';
+      ui.choices.appendChild(badge);
+    }
+
+    const list = document.createElement("div");
+    list.className = "choices-list";
+
+    node.options.forEach((opt, index) => {
+      const theme = choiceFxTheme(opt, index);
+      const high = isHighEnergyOption(opt);
       const btn = document.createElement("button");
-      btn.className = "choice-btn";
-      btn.textContent = opt.text;
+      btn.className =
+        "choice-btn choice-btn--fx choice-btn--fx-" +
+        theme +
+        (high ? " choice-btn--high" : "");
+      btn.type = "button";
+      btn.appendChild(buildButtonFx(theme));
+
+      if (high) {
+        const tag = document.createElement("span");
+        tag.className = "choice-btn-tag";
+        tag.textContent = "关键";
+        btn.appendChild(tag);
+      }
+
+      const label = document.createElement("span");
+      label.className = "choice-btn-label";
+      label.textContent = opt.text;
+      btn.appendChild(label);
+
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
         applyEffects(opt.effects);
         if (opt.flag) state.flags[opt.flag] = true;
         if (opt.flags) opt.flags.forEach((f) => { state.flags[f] = true; });
+        clearChoiceFx();
         ui.choices.classList.add("hidden");
+        ui.choices.innerHTML = "";
         state.waitingChoice = false;
         state.index++;
         saveGame();
         advance();
       });
-      ui.choices.appendChild(btn);
+      list.appendChild(btn);
     });
+
+    ui.choices.appendChild(list);
     syncLayoutVars();
+
+    requestAnimationFrame(() => {
+      ui.choices.classList.add("choices-panel--active");
+      kickChoiceAnimations();
+      syncLayoutVars();
+    });
   }
 
   function resolveEnding() {
@@ -332,11 +500,25 @@
     clearSave();
   }
 
+  function resolveShow(node) {
+    if (node.show != null && node.show !== "") return node.show;
+    const sp = node.speaker || "";
+    if (/旁白|系统|未送达/.test(sp)) return "none";
+    if (/^isapara/i.test(sp)) return "heroine";
+    if (/肖战|战哥|X\.Z/i.test(sp)) return "hero";
+    if (/房东|刘姐|刘婉|张艺兴|宋威龙|龚俊|杨幂|倪妮|杨紫|薇薇|闺蜜|老板|同事|娱记|记者|经纪人|粉丝|弹幕/.test(sp)) {
+      return "npc";
+    }
+    if (/^\？\？\？/.test(sp) || sp === "？？？") return "hero";
+    return "heroine";
+  }
+
   function showLine(node) {
     hideChapterCard();
+    if (node.flag) state.flags[node.flag] = true;
     if (node.chapter) ui.chapter.textContent = getChapterName(node.chapter);
     if (node.bg) setBg(node.bg);
-    setSprites(inferSprites(node.speaker, node.show), node.speaker);
+    setSprites(resolveShow(node), node.speaker);
 
     const speaker = node.speaker || "isapara";
     ui.speaker.textContent = speaker;
@@ -413,7 +595,9 @@
     updateHud();
     setBg("office");
     setSprites("heroine", "isapara");
+    clearChoiceFx();
     ui.choices.classList.add("hidden");
+    ui.choices.innerHTML = "";
     hideChapterCard();
     showScreen("game");
     syncLayoutVars();
@@ -423,7 +607,9 @@
   function continueGame() {
     if (!loadGame()) return startNew();
     updateHud();
+    clearChoiceFx();
     ui.choices.classList.add("hidden");
+    ui.choices.innerHTML = "";
     state.waitingChoice = false;
     state.typing = false;
     showScreen("game");
@@ -477,10 +663,13 @@
   });
 
   function initTitleBg() {
-    if (!ui.titleBg || typeof ASSETS === "undefined" || !ASSETS.bg.title) return;
-    ui.titleBg.style.backgroundImage = "url('" + ASSETS.bg.title + "')";
-    ui.titleBg.style.backgroundSize = "cover";
-    ui.titleBg.style.backgroundPosition = "center";
+    if (!ui.titleBg || typeof ASSETS === "undefined") return;
+    const url = ASSETS.bg.studio || ASSETS.bg.title;
+    if (url) {
+      ui.titleBg.style.backgroundImage = "url('" + url + "')";
+      ui.titleBg.style.backgroundSize = "cover";
+      ui.titleBg.style.backgroundPosition = "center 40%";
+    }
     ui.titleBg.classList.add("title-bg-loaded");
   }
 
