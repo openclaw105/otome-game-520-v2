@@ -11,6 +11,7 @@
     typing: false,
     waitingChoice: false,
     lineReady: false,
+    choiceFxPlaying: false,
   };
 
   const $ = (id) => document.getElementById(id);
@@ -42,6 +43,7 @@
     endingText: $("ending-text"),
     endingStats: $("ending-stats"),
     hint: $("game-hint"),
+    choiceFlash: $("choice-flash"),
   };
 
   function showLoadError(msg) {
@@ -70,9 +72,26 @@
     ui.chapterCard.classList.remove("hidden");
   }
 
+  function ensureBgmUnlock() {
+    if (typeof Bgm !== "undefined") Bgm.unlock();
+  }
+
+  function updateBgmHudBtn() {
+    const btn = $("btn-bgm");
+    if (!btn || typeof Bgm === "undefined") return;
+    btn.classList.toggle("hud-bgm--off", !Bgm.isEnabled());
+    btn.setAttribute("aria-pressed", Bgm.isEnabled() ? "true" : "false");
+  }
+
+  function updateBgmForChapter(chapter) {
+    if (typeof Bgm === "undefined") return;
+    Bgm.playMood(Bgm.moodFromChapter(chapter));
+  }
+
   function showScreen(name) {
     Object.values(screens).forEach((el) => el.classList.remove("active"));
     screens[name].classList.add("active");
+    if (typeof Bgm !== "undefined") Bgm.playForScreen(name);
   }
 
   function clampStat(v) {
@@ -154,6 +173,7 @@
       const showNpc = show === "npc";
       ui.spriteNpc.classList.toggle("hidden", !showNpc);
       ui.spriteNpc.classList.toggle("active", showNpc);
+      ui.spriteNpc.classList.toggle("sprite-npc--bestie", showNpc && npcId === "bestie");
       if (showNpc && ui.spriteNpcImg && typeof ASSETS !== "undefined") {
         const src = ASSETS.npc[npcId] || ASSETS.npc.default;
         ui.spriteNpcImg.src = src;
@@ -314,78 +334,123 @@
     return CHOICE_FX_THEMES[index % CHOICE_FX_THEMES.length];
   }
 
-  function buildChoiceFxLayer(panelTheme) {
-    const fx = document.createElement("div");
-    fx.className = "choices-fx choices-fx--" + panelTheme;
-    fx.setAttribute("aria-hidden", "true");
-    fx.innerHTML =
-      '<div class="choices-aurora"></div>' +
-      '<div class="choices-stream choices-stream--l"></div>' +
-      '<div class="choices-stream choices-stream--r"></div>';
-    const particles = document.createElement("div");
-    particles.className = "choices-particles";
-    for (let i = 0; i < 36; i++) {
-      const p = document.createElement("span");
-      p.className = "choices-particle";
-      p.style.setProperty("--x", (5 + Math.random() * 90).toFixed(1) + "%");
-      p.style.setProperty("--dur", (1.8 + Math.random() * 2.8).toFixed(2) + "s");
-      p.style.setProperty("--delay", (Math.random() * 2.2).toFixed(2) + "s");
-      p.style.setProperty("--size", (4 + Math.random() * 6).toFixed(1) + "px");
-      particles.appendChild(p);
-    }
-    fx.appendChild(particles);
-    return fx;
-  }
-
-  function buildButtonFx(theme) {
-    const wrap = document.createElement("span");
-    wrap.className = "choice-btn-fx";
-    wrap.setAttribute("aria-hidden", "true");
-    const aura = document.createElement("span");
-    aura.className = "choice-btn-aura";
-    const shine = document.createElement("span");
-    shine.className = "choice-btn-shine";
-    const orbit = document.createElement("span");
-    orbit.className = "choice-btn-orbit";
-    const sparks = document.createElement("span");
-    sparks.className = "choice-btn-sparks";
-    for (let i = 0; i < 8; i++) {
-      const s = document.createElement("i");
-      s.style.setProperty("--i", String(i));
-      sparks.appendChild(s);
-    }
-    wrap.appendChild(aura);
-    wrap.appendChild(orbit);
-    wrap.appendChild(shine);
-    wrap.appendChild(sparks);
-    return wrap;
-  }
-
   function clearChoiceFx() {
-    ui.choices.classList.remove("choices-panel--active", "choices-panel--ready", "choices-panel--high");
-    CHOICE_FX_THEMES.forEach((t) => ui.choices.classList.remove("choices-panel--theme-" + t));
+    state.choiceFxPlaying = false;
+    ui.choices.classList.remove("choices-panel--open");
+    if (ui.choiceFlash) {
+      ui.choiceFlash.className = "choice-flash hidden";
+      ui.choiceFlash.classList.remove("choice-flash--play");
+      CHOICE_FX_THEMES.forEach((t) => ui.choiceFlash.classList.remove("choice-flash--" + t, "choice-flash--key"));
+    }
     if (ui.dialogueBox) {
-      ui.dialogueBox.classList.remove("dialogue-box--choice-active", "dialogue-box--high-choice");
+      ui.dialogueBox.classList.remove("dialogue-box--choice-active");
     }
   }
 
-  /** 面板从 hidden 切出后，强制启动 CSS 动画（避免要点一下才播放） */
-  function kickChoiceAnimations() {
-    const restart = (root, selector) => {
-      root.querySelectorAll(selector).forEach((el) => {
-        el.style.animation = "none";
-        void el.offsetWidth;
-        el.style.removeProperty("animation");
+  function fillChoiceParticles(flash, isKey) {
+    const burst = flash.querySelector(".choice-flash-particles");
+    const floats = flash.querySelector(".choice-flash-floats");
+    const sparks = flash.querySelector(".choice-flash-sparks");
+    if (burst) burst.innerHTML = "";
+    if (floats) floats.innerHTML = "";
+    if (sparks) sparks.innerHTML = "";
+
+    const burstN = isKey ? 80 : 52;
+    if (burst) {
+      for (let i = 0; i < burstN; i++) {
+        const p = document.createElement("span");
+        const kind = i % 7 === 0 ? "streak" : i % 4 === 0 ? "star" : "dot";
+        p.className = "cfp cfp--" + kind;
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 28 + Math.random() * (isKey ? 52 : 38);
+        p.style.setProperty("--tx", (Math.cos(angle) * dist).toFixed(2) + "vmin");
+        p.style.setProperty("--ty", (Math.sin(angle) * dist).toFixed(2) + "vmin");
+        p.style.setProperty("--dur", (0.5 + Math.random() * 0.85).toFixed(2) + "s");
+        p.style.setProperty("--delay", (Math.random() * 0.2).toFixed(2) + "s");
+        p.style.setProperty("--size", (3 + Math.random() * 8).toFixed(1) + "px");
+        p.style.setProperty("--rot", Math.floor(Math.random() * 360) + "deg");
+        burst.appendChild(p);
+      }
+    }
+
+    const floatN = isKey ? 36 : 22;
+    if (floats) {
+      for (let i = 0; i < floatN; i++) {
+        const p = document.createElement("span");
+        p.className = "cff";
+        p.style.setProperty("--x", (Math.random() * 100).toFixed(1) + "%");
+        p.style.setProperty("--dur", (1.2 + Math.random() * 1.4).toFixed(2) + "s");
+        p.style.setProperty("--delay", (Math.random() * 0.4).toFixed(2) + "s");
+        p.style.setProperty("--size", (2 + Math.random() * 5).toFixed(1) + "px");
+        p.style.setProperty("--drift", (-12 + Math.random() * 24).toFixed(1) + "px");
+        floats.appendChild(p);
+      }
+    }
+
+    const sparkN = isKey ? 42 : 28;
+    if (sparks) {
+      for (let i = 0; i < sparkN; i++) {
+        const s = document.createElement("span");
+        s.className = i % 5 === 0 ? "cfs cfs--cross" : "cfs";
+        const angle = Math.random() * Math.PI * 2;
+        const r = 8 + Math.random() * 38;
+        s.style.setProperty("--x", (50 + Math.cos(angle) * r).toFixed(1) + "%");
+        s.style.setProperty("--y", (48 + Math.sin(angle) * r).toFixed(1) + "%");
+        s.style.setProperty("--delay", (Math.random() * 0.45).toFixed(2) + "s");
+        s.style.setProperty("--size", (4 + Math.random() * 6).toFixed(1) + "px");
+        sparks.appendChild(s);
+      }
+    }
+  }
+
+  /** 点击选项后播放闪光 + 粒子，结束后再推进剧情 */
+  function playChoiceFlash(theme, isKey, onDone) {
+    const flash = ui.choiceFlash;
+    if (!flash) {
+      onDone();
+      return;
+    }
+    CHOICE_FX_THEMES.forEach((t) => flash.classList.remove("choice-flash--" + t));
+    flash.classList.add("choice-flash--" + theme);
+    flash.classList.toggle("choice-flash--key", !!isKey);
+    flash.classList.remove("hidden", "choice-flash--play");
+    fillChoiceParticles(flash, isKey);
+    void flash.offsetWidth;
+    flash.classList.add("choice-flash--play");
+    if (screens.game) {
+      screens.game.classList.add("screen--choice-impact");
+    }
+
+    const ms = isKey ? 1280 : 980;
+    window.setTimeout(() => {
+      flash.classList.remove("choice-flash--play");
+      flash.classList.add("hidden");
+      if (screens.game) screens.game.classList.remove("screen--choice-impact");
+      onDone();
+    }, ms);
+  }
+
+  function commitChoice(opt, theme, isKey, pickedBtn, listEl) {
+    state.choiceFxPlaying = true;
+    if (listEl) {
+      listEl.querySelectorAll(".choice-btn").forEach((b) => {
+        b.disabled = true;
       });
-    };
-    requestAnimationFrame(() => {
-      void ui.choices.offsetWidth;
-      ui.choices.classList.add("choices-panel--ready");
-      restart(ui.choices, ".choices-particle, .choices-aurora, .choices-stream");
-      restart(ui.choices, ".choice-btn--fx, .choice-btn-aura, .choice-btn-orbit, .choice-btn-shine, .choice-btn-sparks i");
-      requestAnimationFrame(() => {
-        void ui.choices.offsetWidth;
-      });
+    }
+    if (pickedBtn) pickedBtn.classList.add("choice-btn--picked");
+
+    playChoiceFlash(theme, isKey, () => {
+      applyEffects(opt.effects);
+      if (opt.flag) state.flags[opt.flag] = true;
+      if (opt.flags) opt.flags.forEach((f) => { state.flags[f] = true; });
+
+      clearChoiceFx();
+      ui.choices.classList.add("hidden");
+      ui.choices.innerHTML = "";
+      state.waitingChoice = false;
+      state.index++;
+      saveGame();
+      advance();
     });
   }
 
@@ -393,35 +458,22 @@
     hideChapterCard();
     state.waitingChoice = true;
     state.lineReady = false;
-    const panelHigh = isHighEnergyPanel(node);
-    const panelTheme = choiceFxTheme(node.options[0] || {}, 0);
+    state.choiceFxPlaying = false;
 
     clearChoiceFx();
     ui.choices.innerHTML = "";
     ui.choices.classList.remove("hidden");
-    ui.choices.classList.toggle("choices-panel--high", panelHigh);
-    CHOICE_FX_THEMES.forEach((t) => ui.choices.classList.remove("choices-panel--theme-" + t));
-    ui.choices.classList.add("choices-panel--theme-" + panelTheme);
+    ui.choices.classList.add("choices-panel--open");
 
-    setSprites(inferSprites(node.speaker, "heroine"), node.speaker || "isapara");
+    setSprites(resolveShow(node) || "heroine", node.speaker || "isapara");
 
     if (ui.dialogueBox) {
       ui.dialogueBox.classList.add("dialogue-box--choice-active");
-      ui.dialogueBox.classList.toggle("dialogue-box--high-choice", panelHigh);
     }
 
-    setHint(panelHigh ? "✦ 关键抉择 · 请选择上方流光选项" : "✦ 请选择上方流光选项");
-    const prompt = node.prompt || "请选择：";
+    setHint("请选择上方选项");
     if (ui.text) {
-      ui.text.innerHTML = '<span class="choice-prompt-glow">' + prompt + "</span>";
-    }
-
-    ui.choices.appendChild(buildChoiceFxLayer(panelTheme));
-    if (panelHigh) {
-      const badge = document.createElement("div");
-      badge.className = "choices-badge";
-      badge.innerHTML = '<span class="choices-badge-spark"></span><span>关键抉择</span>';
-      ui.choices.appendChild(badge);
+      ui.text.textContent = node.prompt || "请选择：";
     }
 
     const list = document.createElement("div");
@@ -429,51 +481,34 @@
 
     node.options.forEach((opt, index) => {
       const theme = choiceFxTheme(opt, index);
-      const high = isHighEnergyOption(opt);
+      const isKey = isHighEnergyOption(opt);
       const btn = document.createElement("button");
-      btn.className =
-        "choice-btn choice-btn--fx choice-btn--fx-" +
-        theme +
-        (high ? " choice-btn--high" : "");
+      btn.className = "choice-btn choice-btn--plain" + (isKey ? " choice-btn--key-hint" : "");
       btn.type = "button";
-      btn.appendChild(buildButtonFx(theme));
-
-      if (high) {
-        const tag = document.createElement("span");
-        tag.className = "choice-btn-tag";
-        tag.textContent = "关键";
-        btn.appendChild(tag);
-      }
+      btn.dataset.fx = theme;
 
       const label = document.createElement("span");
       label.className = "choice-btn-label";
       label.textContent = opt.text;
       btn.appendChild(label);
 
+      if (isKey) {
+        const tag = document.createElement("span");
+        tag.className = "choice-btn-tag-plain";
+        tag.textContent = "关键";
+        btn.appendChild(tag);
+      }
+
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
-        applyEffects(opt.effects);
-        if (opt.flag) state.flags[opt.flag] = true;
-        if (opt.flags) opt.flags.forEach((f) => { state.flags[f] = true; });
-        clearChoiceFx();
-        ui.choices.classList.add("hidden");
-        ui.choices.innerHTML = "";
-        state.waitingChoice = false;
-        state.index++;
-        saveGame();
-        advance();
+        if (state.choiceFxPlaying) return;
+        commitChoice(opt, theme, isKey, btn, list);
       });
       list.appendChild(btn);
     });
 
     ui.choices.appendChild(list);
     syncLayoutVars();
-
-    requestAnimationFrame(() => {
-      ui.choices.classList.add("choices-panel--active");
-      kickChoiceAnimations();
-      syncLayoutVars();
-    });
   }
 
   function resolveEnding() {
@@ -516,7 +551,10 @@
   function showLine(node) {
     hideChapterCard();
     if (node.flag) state.flags[node.flag] = true;
-    if (node.chapter) ui.chapter.textContent = getChapterName(node.chapter);
+    if (node.chapter) {
+      ui.chapter.textContent = getChapterName(node.chapter);
+      updateBgmForChapter(node.chapter);
+    }
     if (node.bg) setBg(node.bg);
     setSprites(resolveShow(node), node.speaker);
 
@@ -550,7 +588,10 @@
     }
 
     if (node.type === "chapter") {
-      if (node.chapter) ui.chapter.textContent = getChapterName(node.chapter);
+      if (node.chapter) {
+        ui.chapter.textContent = getChapterName(node.chapter);
+        updateBgmForChapter(node.chapter);
+      }
       showChapterCard(node);
       ui.speaker.textContent = "章节";
       ui.text.textContent = (node.title || "") + "\n" + (node.text || "");
@@ -566,7 +607,7 @@
   }
 
   function nextLine() {
-    if (state.waitingChoice) return;
+    if (state.waitingChoice || state.choiceFxPlaying) return;
     if (state.typing) {
       cancelTyping();
       return;
@@ -590,6 +631,7 @@
     state.rumor = 0;
     state.flags = {};
     state.waitingChoice = false;
+    state.choiceFxPlaying = false;
     state.typing = false;
     state.lineReady = false;
     updateHud();
@@ -629,11 +671,35 @@
   }
 
   $("btn-start").addEventListener("click", () => {
+    ensureBgmUnlock();
     clearSave();
     startNew();
   });
 
-  $("btn-continue").addEventListener("click", continueGame);
+  $("btn-continue").addEventListener("click", () => {
+    ensureBgmUnlock();
+    continueGame();
+  });
+
+  const btnBgm = $("btn-bgm");
+  if (btnBgm) {
+    btnBgm.addEventListener("click", (e) => {
+      e.stopPropagation();
+      ensureBgmUnlock();
+      if (typeof Bgm !== "undefined") {
+        Bgm.toggle();
+        updateBgmHudBtn();
+      }
+    });
+  }
+
+  screens.title.addEventListener("click", () => {
+    ensureBgmUnlock();
+    if (typeof Bgm !== "undefined" && screens.title.classList.contains("active")) {
+      Bgm.playForScreen("title");
+      updateBgmHudBtn();
+    }
+  });
   $("btn-restart").addEventListener("click", restart);
   $("btn-next").addEventListener("click", (e) => {
     e.stopPropagation();
@@ -683,6 +749,10 @@
       return;
     }
     initTitleBg();
+    if (typeof Bgm !== "undefined") {
+      Bgm.init();
+      updateBgmHudBtn();
+    }
     setBg("office");
     if (!$("btn-start")) return;
     if (loadGame()) {

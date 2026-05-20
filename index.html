@@ -74,9 +74,23 @@
       </div>
     </section>
     <section id="screen-game" class="screen">
+      <div id="choice-flash" class="choice-flash hidden" aria-hidden="true">
+        <div class="choice-flash-vignette"></div>
+        <div class="choice-flash-rays"></div>
+        <div class="choice-flash-sweep"></div>
+        <div class="choice-flash-sweep choice-flash-sweep--rev"></div>
+        <div class="choice-flash-core"></div>
+        <div class="choice-flash-ring"></div>
+        <div class="choice-flash-ring choice-flash-ring--outer"></div>
+        <div class="choice-flash-shockwave"></div>
+        <div class="choice-flash-particles"></div>
+        <div class="choice-flash-floats"></div>
+        <div class="choice-flash-sparks"></div>
+      </div>
       <header class="hud">
         <div class="chapter-badge"><span id="chapter-label">序章</span></div>
         <div class="stats-bar">
+          <button type="button" id="btn-bgm" class="hud-bgm" title="背景音乐开关" aria-label="背景音乐">♫</button>
           <div class="stat"><span class="stat-icon">♥</span><span id="stat-affection">0</span></div>
           <div class="stat"><span class="stat-icon">✦</span><span id="stat-trust">0</span></div>
           <div class="stat"><span class="stat-icon">⚡</span><span id="stat-stress">0</span></div>
@@ -117,6 +131,7 @@
   <script src="js/story-expand.js"></script>
   <script src="js/story-routes.js"></script>
   <script src="js/story-flow.js"></script>
+  <script src="js/bgm.js"></script>
   <script src="js/game.js"></script>
 </body>
 </html>

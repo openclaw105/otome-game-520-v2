@@ -1,0 +1,7 @@
+背景音乐来源（可自由用于本项目）：
+SoundHelix — https://www.soundhelix.com
+- bgm-title.mp3 / bgm-ending.mp3：SoundHelix Song 2
+- bgm-story.mp3：SoundHelix Song 8
+- bgm-angst.mp3：SoundHelix Song 1
+
+如需更换为自有纯音乐，将 MP3 放入本目录并保持文件名一致即可。

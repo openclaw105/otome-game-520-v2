@@ -1,5 +1,11 @@
 /** 游戏资源路径（相对 index.html） */
 const ASSETS = {
+  audio: {
+    title: "assets/audio/bgm-title.mp3",
+    story: "assets/audio/bgm-story.mp3",
+    angst: "assets/audio/bgm-angst.mp3",
+    ending: "assets/audio/bgm-ending.mp3",
+  },
   hero: "assets/images/hero-xiaozhan-cutout.png",
   heroine: "assets/images/heroine-isapara-cutout.png",
   bg: {
